@@ -1,0 +1,26 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+      http:
+
+processors:
+  batch:
+
+exporters:
+  otlphttp:
+    endpoint: "http://refinery:8080"
+    headers:
+      - "x-honeycomb-team": ${HONEYCOMB_API_KEY}
+    tls:
+      insecure: true
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [otlphttp]
+  telemetry:
+    logs:
+      level: "debug"
